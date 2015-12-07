@@ -102,15 +102,15 @@ def product(iterables, key=None):
     else:
         f = lambda coords: sum(key(v) for v in grid.get(coords))
 
-    uheap = UniqHeap(key=f)
+    heap = UniqHeap(key=f)
     coords = grid.start
 
     while True:
         try:
             yield grid.get(coords)
             for n in grid.neighbors(coords):
-                uheap.push(n)
-            coords = uheap.pop()
+                heap.push(n)
+            coords = heap.pop()
         except IndexError:
             break
 
