@@ -54,7 +54,10 @@ Note that (1, 1) is now before (0, 2) and (2, 0).
 from __future__ import with_statement, print_function, division
 
 import heapq
-from itertools import izip as zip #pylint: disable=redefined-builtin
+try:
+    from itertools import izip as zip #pylint: disable=redefined-builtin
+except ImportError:
+    pass
 
 __all__ = ['product']
 
