@@ -8,7 +8,7 @@ With no extra parameter, the minimized function relates to
 the sum of the indices of the elements.
 
 >>> for t in product([[0, 1, 2], [0, 1, 2]]):
-...     print t
+...     print(t)
 (0, 0)
 (0, 1)
 (1, 0)
@@ -24,7 +24,7 @@ Note that (1, 1) is now after (0, 2) and (2, 0).
 
 >>> from math import sqrt
 >>> for t in product([[0, 1, 2], [0, 1, 2]], key=sqrt):
-...     print t
+...     print(t)
 (0, 0)
 (0, 1)
 (1, 0)
@@ -39,7 +39,7 @@ Change that to the square.
 Note that (1, 1) is now before (0, 2) and (2, 0).
 
 >>> for t in product([[0, 1, 2], [0, 1, 2]], key=lambda i: i**2):
-...     print t
+...     print(t)
 (0, 0)
 (0, 1)
 (1, 0)
@@ -50,6 +50,8 @@ Note that (1, 1) is now before (0, 2) and (2, 0).
 (2, 1)
 (2, 2)
 """
+
+from __future__ import with_statement, print_function, division
 
 __all__ = ['product']
 
@@ -119,4 +121,4 @@ if __name__ == '__main__':
 
     import sys
     for t in product(sys.argv[1:]):
-        print t
+        print(t)
