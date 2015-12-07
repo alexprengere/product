@@ -114,7 +114,7 @@ def product(iterables, key=None):
             yield grid.get(coords)
             for n in grid.neighbors(coords):
                 heap.push(n)
-            coords = heap.pop()
+            coords = heap.pop() # IndexError if empty
 
     except IndexError:
         pass
