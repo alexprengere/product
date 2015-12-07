@@ -54,6 +54,7 @@ Note that (1, 1) is now before (0, 2) and (2, 0).
 from __future__ import with_statement, print_function, division
 
 import heapq
+from itertools import izip as zip #pylint: disable=redefined-builtin
 
 __all__ = ['product']
 
@@ -76,43 +77,44 @@ class UniqHeap(object):
 
 
 class Grid(object):
-    def __init__(self, *iterables):
+    def __init__(self, iterables):
         self.iterables = iterables
         self.start = tuple(0 for _ in iterables)
-        self._limits = tuple(len(it) - 1 for it in iterables)
+        self.limits = tuple(len(it) - 1 for it in iterables)
 
     def get(self, coords):
         return tuple(it[c] for it, c in zip(self.iterables, coords))
 
     def neighbors(self, coords):
-        for i, limit in enumerate(self._limits):
-            new_coords = list(coords)
-            new_coords[i] += 1
-            if new_coords[i] <= limit:
-                yield tuple(new_coords)
+        for i, limit in enumerate(self.limits):
+            neighbor = list(coords)
+            neighbor[i] += 1
+            if neighbor[i] <= limit:
+                yield tuple(neighbor)
 
 
 def product(iterables, key=None):
     for i, it in enumerate(iterables):
         iterables[i] = sorted(it, key=key)
 
-    grid = Grid(*iterables)
+    grid = Grid(iterables)
     if key is None:
         f = sum
     else:
         f = lambda coords: sum(key(v) for v in grid.get(coords))
 
-    heap = UniqHeap(key=f)
-    coords = grid.start
+    try:
+        heap = UniqHeap(key=f)
+        coords = grid.start
 
-    while True:
-        try:
+        while True:
             yield grid.get(coords)
             for n in grid.neighbors(coords):
                 heap.push(n)
             coords = heap.pop()
-        except IndexError:
-            break
+
+    except IndexError:
+        pass
 
 
 if __name__ == '__main__':
