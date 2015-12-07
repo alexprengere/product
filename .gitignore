@@ -1,5 +1,9 @@
-*.pyc
-build/
-dist/
+*pyc
 *.egg-info/
+dist
+*.pid
 *.sw[po]
+.tox
+.env
+.cache
+build
