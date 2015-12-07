@@ -53,72 +53,73 @@ Note that (1, 1) is now before (0, 2) and (2, 0).
 
 from __future__ import with_statement, print_function, division
 
+import heapq
+
 __all__ = ['product']
 
 
-def neighbors(coords, limits):
-    for i, limit in enumerate(limits):
-        new_coords = list(coords)
-        new_coords[i] += 1
-        if new_coords[i] <= limit:
-            yield tuple(new_coords)
+class UniqHeap(object):
+    def __init__(self, key=lambda x: x):
+        self._key = key
+        self._members = set()
+        self._heap = []
+
+    def push(self, item):
+        if item not in self._members:
+            self._members.add(item)
+            heapq.heappush(self._heap, (self._key(item), item))
+
+    def pop(self):
+        item = heapq.heappop(self._heap)[1]
+        self._members.remove(item)
+        return item
 
 
-def compute_next_coords(frontier, limits, f):
-    candidates = []
-    for coords in frontier:
-        for n in neighbors(coords, limits):
-            if n not in frontier:
-                candidates.append(n)
-    # This will raise ValueError and stop the process when done
-    return min(candidates, key=f)
+class Grid(object):
+    def __init__(self, *iterables):
+        self.iterables = iterables
+        self.start = tuple(0 for _ in iterables)
+        self._limits = tuple(len(it) - 1 for it in iterables)
 
+    def get(self, coords):
+        return tuple(it[c] for it, c in zip(self.iterables, coords))
 
-def clean(frontier, limits):
-    """This keeps the frontier slim."""
-    behind = set()
-    for coords in frontier:
-        if all(n in frontier for n in neighbors(coords, limits)):
-            behind.add(coords)
-    for coords in behind:
-        frontier.remove(coords)
-
-
-def get_values(iterables, coords):
-    return tuple(it[c] for it, c in zip(iterables, coords))
+    def neighbors(self, coords):
+        for i, limit in enumerate(self._limits):
+            new_coords = list(coords)
+            new_coords[i] += 1
+            if new_coords[i] <= limit:
+                yield tuple(new_coords)
 
 
 def product(iterables, key=None):
-    # The second element is to settle cases with equality
-    # To make lesser coordinates a priority
+    for i, it in enumerate(iterables):
+        iterables[i] = sorted(it, key=key)
+
+    grid = Grid(*iterables)
     if key is None:
-        f = lambda coords: (sum(coords), coords)
+        f = sum
     else:
-        for i, it in enumerate(iterables):
-            iterables[i] = sorted(it, key=key)
+        f = lambda coords: sum(key(v) for v in grid.get(coords))
 
-        f = lambda coords: (sum(key(e) for e in get_values(iterables, coords)), \
-                            coords)
-
-    limits = tuple(len(it) - 1 for it in iterables)
-    start_coords = tuple(0 for _ in iterables)
-    yield get_values(iterables, start_coords)
-    frontier = set([start_coords])
+    uheap = UniqHeap(key=f)
+    coords = grid.start
 
     while True:
         try:
-            coords = compute_next_coords(frontier, limits, f)
-            yield get_values(iterables, coords)
-            frontier.add(coords)
-            clean(frontier, limits)
-        except ValueError:
+            yield grid.get(coords)
+            for n in grid.neighbors(coords):
+                uheap.push(n)
+            coords = uheap.pop()
+        except IndexError:
             break
 
 
 if __name__ == '__main__':
+    import sys
     import doctest
+
     doctest.testmod()
 
-    import sys
     for t in product(sys.argv[1:]):
         print(t)
