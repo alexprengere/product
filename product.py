@@ -104,7 +104,7 @@ def product(iterables, key=None):
         pass
 
 
-if __name__ == '__main__':
+def main():
     import sys
     import doctest
 
@@ -112,3 +112,8 @@ if __name__ == '__main__':
 
     for t in product(sys.argv[1:]):
         print(t)
+
+
+if __name__ == '__main__':
+    main()
+

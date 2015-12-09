@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from product import product
 from math import sqrt
+from product import product
 
 
 def test_product():
@@ -43,11 +43,17 @@ def test_product():
     ]
 
 
-def test_duplicatest():
+def test_duplicates():
     assert list(product([[2, 2], [2, 2]])) == [
         (2, 2),
         (2, 2),
         (2, 2),
         (2, 2),
     ]
+
+
+def test_benchmark(benchmark):
+    def run(iterables):
+        list(product(iterables))
+    benchmark(run, [range(150), range(150)])
 
