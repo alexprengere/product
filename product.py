@@ -4,9 +4,6 @@
 """
 Cartesian product with objective function to minimize.
 
-With no extra parameter, the minimized function relates to
-the sum of the indices of the elements.
-
 >>> for t in product([[0, 1, 2], [0, 1, 2]]):
 ...     print(t)
 (0, 0)
@@ -19,20 +16,6 @@ the sum of the indices of the elements.
 (2, 1)
 (2, 2)
 
-Now let's try with an objective function to minimize.
-Note that (1, 1) is now before (0, 2) and (2, 0).
-
->>> for t in product([[0, 1, 2], [0, 1, 2]], key=lambda i: i**2):
-...     print(t)
-(0, 0)
-(0, 1)
-(1, 0)
-(1, 1)
-(0, 2)
-(2, 0)
-(1, 2)
-(2, 1)
-(2, 2)
 """
 
 from __future__ import with_statement, print_function, division
@@ -80,18 +63,13 @@ class Grid(object):
                 yield tuple(neighbor)
 
 
-def product(iterables, key=None):
+def product(iterables, key=lambda x: x):
     for i, it in enumerate(iterables):
         iterables[i] = sorted(it, key=key)
 
     grid = Grid(iterables)
-    if key is None:
-        f = sum
-    else:
-        f = lambda coords: sum(key(v) for v in grid.get(coords))
-
     try:
-        heap = UniqHeap(key=f)
+        heap = UniqHeap(key=lambda c: sum(key(v) for v in grid.get(c)))
         coords = grid.start
 
         while True:
