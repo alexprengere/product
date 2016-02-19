@@ -88,7 +88,7 @@ def main():
 
     doctest.testmod()
 
-    for t in product(sys.argv[1:]):
+    for t in product(sys.argv[1:], key=lambda x: 1):
         print(t)
 
 
