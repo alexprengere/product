@@ -56,4 +56,3 @@ def test_benchmark(benchmark):
     def run(iterables):
         list(product(iterables))
     benchmark(run, [range(150), range(150)])
-
