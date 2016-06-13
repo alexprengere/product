@@ -22,7 +22,7 @@ from __future__ import with_statement, print_function, division
 
 import heapq
 try:
-    from itertools import izip as zip #pylint: disable=redefined-builtin
+    from itertools import izip as zip
 except ImportError:
     pass
 
@@ -76,7 +76,7 @@ def product(iterables, key=lambda x: x):
             yield grid.get(coords)
             for n in grid.neighbors(coords):
                 heap.push(n)
-            coords = heap.pop() # IndexError if empty
+            coords = heap.pop()  # IndexError if empty
 
     except IndexError:
         pass
@@ -94,4 +94,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
