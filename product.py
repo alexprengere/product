@@ -64,10 +64,7 @@ class Grid(object):
 
 
 def product(iterables, key=lambda x: x):
-    for i, it in enumerate(iterables):
-        iterables[i] = sorted(it, key=key)
-
-    grid = Grid(iterables)
+    grid = Grid([sorted(it, key=key) for it in iterables])
     try:
         heap = UniqHeap(key=lambda c: sum(key(v) for v in grid.get(c)))
         coords = grid.start
