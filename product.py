@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 Cartesian product with objective function to minimize.
@@ -18,18 +17,13 @@ Cartesian product with objective function to minimize.
 
 """
 
-from __future__ import with_statement, print_function, division
 
 import heapq
-try:
-    from itertools import izip as zip
-except ImportError:
-    pass
 
-__all__ = ['product']
+__all__ = ["product"]
 
 
-class UniqHeap(object):
+class UniqHeap:
     def __init__(self, key=lambda x: x):
         self._key = key
         self._members = set()
@@ -46,7 +40,7 @@ class UniqHeap(object):
         return item
 
 
-class Grid(object):
+class Grid:
     def __init__(self, iterables):
         self.iterables = iterables
         self.start = tuple(0 for _ in iterables)
@@ -89,5 +83,5 @@ def main():
         print(t)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
